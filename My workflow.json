@@ -1,0 +1,272 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -16
+      ],
+      "id": "4f3d1ef2-de99-489a-b3c5-3b7a3776d9e1",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        272,
+        -32
+      ],
+      "id": "0fd60a8f-b907-4ae0-9f00-ce9292c263d0",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        368
+      ],
+      "id": "66ec38c4-370f-40be-a820-bb62a6a6b0fa",
+      "name": "วิเคราะห์ทำนายฝันและเพลง1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "sG5jhXQNB7Pch8gk",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "resource": "album",
+        "operation": "search",
+        "query": "mood",
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.spotify",
+      "typeVersion": 1,
+      "position": [
+        896,
+        -32
+      ],
+      "id": "933b1481-457f-447c-9375-c47da48923c0",
+      "name": "Search albums by keyword",
+      "credentials": {
+        "spotifyOAuth2Api": {
+          "id": "ArYKBdA7Vs4m0Quu",
+          "name": "Spotify account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "วิเคราะห์ข้อมูลจาก Docs",
+        "options": {
+          "passthroughBinaryImages": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        512,
+        -32
+      ],
+      "id": "d428880c-b091-4ddd-8465-c44f0972ad92",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {
+          "maxOutputTokens": 2048,
+          "temperature": 0.4
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        512,
+        224
+      ],
+      "id": "41d67a84-3017-4812-9050-4079dcbdc7f5",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "sG5jhXQNB7Pch8gk",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "__CUSTOM_API_CALL__"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -208,
+        -16
+      ],
+      "id": "733360be-c014-460e-a10b-8cef12e640dd",
+      "name": "ข้อมูลบันทึกความฝัน",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "lCVNk08l2yNiR34s",
+          "name": "Google Docs account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "__CUSTOM_API_CALL__"
+      },
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 2,
+      "position": [
+        32,
+        -192
+      ],
+      "id": "5cb23605-aa9d-409e-8b50-562e2f52c1d8",
+      "name": "ข้อมูลพฤติกรรม",
+      "credentials": {
+        "twitterOAuth2Api": {
+          "id": "j5Ry7zv5MGSLv9xy",
+          "name": "X account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "__CUSTOM_API_CALL__"
+      },
+      "type": "n8n-nodes-base.line",
+      "typeVersion": 1,
+      "position": [
+        1104,
+        -32
+      ],
+      "id": "c32cd831-ad6c-419e-a1b6-1f55ad7183a9",
+      "name": "ส่งผลลัพธ์",
+      "credentials": {
+        "lineNotifyOAuth2Api": {
+          "id": "ZNccbBJEgIR5ZDyZ",
+          "name": "Line Notify account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "ข้อมูลบันทึกความฝัน",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "วิเคราะห์ทำนายฝันและเพลง1": {
+      "main": [
+        []
+      ]
+    },
+    "Search albums by keyword": {
+      "main": [
+        [
+          {
+            "node": "ส่งผลลัพธ์",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Search albums by keyword",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ข้อมูลบันทึกความฝัน": {
+      "main": [
+        [
+          {
+            "node": "ข้อมูลพฤติกรรม",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ข้อมูลพฤติกรรม": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "150b0600-6200-4505-a066-f1aaf6c40d9c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5f4287f6e528847f186ffe534e8afa22be2f66d634554d6e6c4d86f907d53c11"
+  },
+  "id": "qcfFJWouInYZW3n2",
+  "tags": []
+}
